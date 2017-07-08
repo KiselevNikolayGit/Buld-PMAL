@@ -1,2 +1,2 @@
 # Buld-PMAL
-.pmal file builder. For Love2d engine.
+Проект запланирован, но вообще не знаю.
