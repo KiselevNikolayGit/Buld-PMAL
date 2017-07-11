@@ -54,8 +54,15 @@ function love.mousepressed(x, y, button, istouch)
 		j = math.floor(((y - (scale / 2)) * (w / 25) / scw) + 0.5)
 		if mainMap[i][j] ~= 0 then
 			mainMap[i][j] = 0
+			for key = 1, #order do
+				value = order[key]
+				if value == {i, j} then
+					order[key] = {}
+				end
+			end
 		else
 			mainMap[i][j] = 1
+			order[#order + 1] = {i, j}
 		end
   end
 	scale = 50
@@ -117,13 +124,9 @@ function love.update(dt)
 	scw = w - scale * 2
 	sch = h - scale * 2
 	polygonparts = {}	
-	for i, map in ipairs(mainMap) do
-		for j, cond in ipairs(map) do
-			if mainMap[i][j] ~= 0 then
-				polygonparts[#polygonparts + 1] = scale + ((i - 1) * scw / (w / 25))
-				polygonparts[#polygonparts + 1] = scale + ((j - 1) * scw / (w / 25))
-			end
-		end
+	for i, ord in ipairs(order) do
+		polygonparts[#polygonparts + 1] = scale + ((ord[1] - 1) * scw / (w / 25))
+		polygonparts[#polygonparts + 1] = scale + ((ord[2] - 1) * scw / (w / 25))
 	end
 end
 
@@ -142,6 +145,7 @@ function love.draw()
 		love.graphics.setLineWidth(5)
 		if #polygonparts >= 6 then
 			love.graphics.polygon("line", polygonparts)
+			love.graphics.polygon("fill", polygonparts)
 		end
 		love.graphics.setLineWidth(2.5)		
 		for i, map in ipairs(mainMap) do
