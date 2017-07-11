@@ -2,6 +2,7 @@ function love.load()
 	rgbhex, love.PMALdraw, love.PMALphysic, love.PMALopen = love.filesystem.load("pmal.lua")()
 	scale = 50
 	w, h = 800, 800
+	order = {}
 	filename = "no-name-" .. tostring(love.math.random(0, 999))
 	love.keyboard.setKeyRepeat(true)
 	love.window.setTitle("Buld-PMAL")
@@ -107,11 +108,6 @@ function love.filedropped(file)
 	file:close()
 end
 
--- function love.resize(nw, nh)
--- 	love.window.setMode(nw, nw, {resizable=true, minwidth=600, minheight=600})
--- 	w, h = nw, nw
--- end
-
 function love.update(dt)
 	if time ~= nil then
 		time = time + dt
@@ -121,19 +117,14 @@ function love.update(dt)
 	scw = w - scale * 2
 	sch = h - scale * 2
 	polygonparts = {}	
-	convexparts = {}
 	for i, map in ipairs(mainMap) do
 		for j, cond in ipairs(map) do
 			if mainMap[i][j] ~= 0 then
-				convexparts[#convexparts + 1] = {scale + ((i - 1) * scw / (w / 25)), scale + ((j - 1) * scw / (w / 25))}
+				polygonparts[#polygonparts + 1] = scale + ((i - 1) * scw / (w / 25))
+				polygonparts[#polygonparts + 1] = scale + ((j - 1) * scw / (w / 25))
 			end
 		end
 	end
-	for i, part in ipairs(convexparts) do
-		polygonparts[#polygonparts + 1] = part[1]
-		polygonparts[#polygonparts + 1] = part[2]
-	end
-	print(table.concat( polygonparts, ", "))
 end
 
 function love.draw()
@@ -148,9 +139,11 @@ function love.draw()
 			love.graphics.line(0 + scale, 0 + scale + (i * sch / (w / 25)), scw + scale, 0 + scale + (i * sch / (w / 25)))		
 		end
 		love.graphics.setColor(70, 137, 102)
+		love.graphics.setLineWidth(5)
 		if #polygonparts >= 6 then
 			love.graphics.polygon("line", polygonparts)
 		end
+		love.graphics.setLineWidth(2.5)		
 		for i, map in ipairs(mainMap) do
 			for j, cond in ipairs(map) do
 		 		if mainMap[i][j] == 0 then
