@@ -1,31 +1,92 @@
 function love.load()
 	rgbhex, love.PMALdraw, love.PMALphysic, love.PMALopen = love.filesystem.load("pmal.lua")()
 	scale = 50
-	w, h = 600, 600
+	w, h = 800, 800
 	filename = "no-name-" .. tostring(love.math.random(0, 999))
 	love.keyboard.setKeyRepeat(true)
 	love.window.setTitle("Buld-PMAL")
 	love.window.setMode(w, h) -- , {resizable=true, minwidth=600, minheight=600})
+	love.mouse.setCursor(love.mouse.getSystemCursor("crosshair"))
+	font = love.graphics.newFont("Zilla-Slab/ZillaSlab-Bold.ttf", 24)
+	mainMap = {
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	}
+	tranx, trany = 0, 0
+	love.graphics.setBackgroundColor(255, 176, 59)
 end
 
 function love.mousepressed(x, y, button, istouch)
-  if button == 1 then
-		--ищву
+	if button == 1 and scale == 50 and tranx == 0 and trany == 0 then
+		i = math.floor(((x - (scale / 2)) * (w / 25) / scw) + 0.5)
+		j = math.floor(((y - (scale / 2)) * (w / 25) / scw) + 0.5)
+		if mainMap[i][j] ~= 0 then
+			mainMap[i][j] = 0
+		else
+			mainMap[i][j] = 1
+		end
   end
+	scale = 50
+  tranx, trany = 0, 0
+	scw = w - scale * 2
+	sch = h - scale * 2
 end
 
 function love.textinput(t)
-    filename = filename .. t
+	filename = filename .. t
 end
  
 function love.keypressed(key)
-    if key == "backspace" then
-			filename = string.sub(filename, 1, -2)
-    end
+	if key == "backspace" then
+		filename = string.sub(filename, 1, -2)
+	end
+	if key == "left" then
+		tranx = tranx + 12
+	end
+	if key == "right" then
+		tranx = tranx - 12
+	end
+	if key == "up" then
+		trany = trany + 12
+	end
+	if key == "down" then
+		trany = trany - 12
+	end		
 end
 
 function love.wheelmoved(x, y)
-  scale = scale + (y * 4)
+  scale = scale - (y * 6)
 end
 
 function love.directorydropped(path)
@@ -59,18 +120,54 @@ function love.update(dt)
 	end
 	scw = w - scale * 2
 	sch = h - scale * 2
+	polygonparts = {}	
+	convexparts = {}
+	for i, map in ipairs(mainMap) do
+		for j, cond in ipairs(map) do
+			if mainMap[i][j] ~= 0 then
+				convexparts[#convexparts + 1] = {scale + ((i - 1) * scw / (w / 25)), scale + ((j - 1) * scw / (w / 25))}
+			end
+		end
+	end
+	for i, part in ipairs(convexparts) do
+		polygonparts[#polygonparts + 1] = part[1]
+		polygonparts[#polygonparts + 1] = part[2]
+	end
+	print(table.concat( polygonparts, ", "))
 end
 
 function love.draw()
-	if time > 4 then
-		love.graphics.setColor(10, 55, 100)
+	love.graphics.setFont(font)
+	love.graphics.setLineStyle("smooth")
+	if time > 0.4 then
+		love.graphics.translate(tranx, trany)
+		love.graphics.setLineWidth(2.5)
+		love.graphics.setColor(182, 73, 38)
 		for i = 0, w / 25 do
 			love.graphics.line(0 + scale + (i * scw / (w / 25)), 0 + scale, 0 + scale + (i * scw / (w / 25)), sch + scale)
 			love.graphics.line(0 + scale, 0 + scale + (i * sch / (w / 25)), scw + scale, 0 + scale + (i * sch / (w / 25)))		
 		end
-		love.graphics.setColor(144, 55, 4)
-		love.graphics.print("file name: " .. filename)
+		love.graphics.setColor(70, 137, 102)
+		if #polygonparts >= 6 then
+			love.graphics.polygon("line", polygonparts)
+		end
+		for i, map in ipairs(mainMap) do
+			for j, cond in ipairs(map) do
+		 		if mainMap[i][j] == 0 then
+					love.graphics.circle("line", scale + ((i - 1) * scw / (w / 25)), scale + ((j - 1) * scw / (w / 25)), 2.5)
+					love.graphics.circle("fill", scale + ((i - 1) * scw / (w / 25)), scale + ((j - 1) * scw / (w / 25)), 2.5)
+				else
+					love.graphics.circle("line", scale + ((i - 1) * scw / (w / 25)), scale + ((j - 1) * scw / (w / 25)), 5)
+					love.graphics.circle("fill", scale + ((i - 1) * scw / (w / 25)), scale + ((j - 1) * scw / (w / 25)), 5)
+				end
+			end
+		end
+		love.graphics.setColor(142, 40, 0)
+		love.graphics.print("File name: " .. filename, -tranx + 10, -trany + 10)
 	else
-		love.graphics.print("Rules:\n\n\tMouse - set point of mesh\n\tMouseWheel - resize\n\tArrows - move\n\tDrop Folder in window - save in folder\n\tDrop File in window - append picture (only '.png')")
+		love.graphics.setColor(142, 40, 0)
+		love.graphics.print("\n\n\nRules:\n\n\tMouse - set point of mesh.\n\tMouseWheel - resize.\n\tArrows - move.\n\tDrop Folder in window - save in folder.\n\tDrop File in window - append picture (only '.png').", 10, 10)
+		love.graphics.setColor(70, 137, 102)
+		love.graphics.print("Buld-PMAL.", 10, 10)
 	end
 end
