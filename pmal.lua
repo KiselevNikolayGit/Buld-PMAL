@@ -1,9 +1,13 @@
 -- Original source:
 -- https://github.com/KiselevNikolayGit/PMAL
 
+-- To bild in this lib write next line WITH NO CHANGES in love.load()
+-- love.PMALdraw, love.PMALphysic, love.PMALopen = love.filesystem.load("pmal.lua")()
+-- if "pmal.lua" is not in main.lua directory change path to file           ^
+
 function rgbhex(hex)
-	hex = hex:gsub("#","")
-	return tonumber("0x"..hex:sub(1,2)), tonumber("0x"..hex:sub(3,4)), tonumber("0x"..hex:sub(5,6))
+  hex = hex:gsub("#","")
+  return tonumber("0x"..hex:sub(1,2)), tonumber("0x"..hex:sub(3,4)), tonumber("0x"..hex:sub(5,6))
 end
 
 function love.PMALphysic(pmal, world, x, y, BodyType)
@@ -64,24 +68,15 @@ function love.PMALopen(filename)
   end
   pmal = {}
   pmal.t = type
-  print("type:    ", type)
   pmal.p = points
-  print("points:  ", points)
   pmal.s = style
-  print("style:   ", style)
   pmal.c = color
-  print("color:   ", color)
   pmal.i = image
-  print("image:   ", image)
   pmal.w = sizew
-  print("sizew:   ", sizew)
   pmal.h = sizeh
-  print("sizeh:   ", sizeh)
   pmal.ox = offsetx
-  print("offsetx: ", offsetx)
   pmal.oy = offsety
-  print("offsety: ", offsety)
   return pmal
 end
 
-return rgbhex, love.PMALdraw, love.PMALphysic, love.PMALopen
+return love.PMALdraw, love.PMALphysic, love.PMALopen,	rgbhex
